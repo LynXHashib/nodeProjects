@@ -1,0 +1,26 @@
+[
+  {
+    "id": 0,
+    "Product": "Bottle of Water",
+    "Amount": 200,
+    "Discount": 200
+  },
+  {
+    "id": 1,
+    "Product": "Soap",
+    "Amount": 40,
+    "Discount": 200
+  },
+  {
+    "id": 2,
+    "Product": "Lotion",
+    "Amount": 20,
+    "Discount": 120
+  },
+  {
+    "id": 3,
+    "Product": "Guitar",
+    "Amount": 14,
+    "Discount": 2000
+  }
+]
