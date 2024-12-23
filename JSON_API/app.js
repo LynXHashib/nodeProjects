@@ -7,12 +7,12 @@ const app = express();
 ///////////////
 
 const PORT = 3000;
-const order = fs.readFileSync("./entry.json", "utf-8");
-const orderID = JSON.parse(order);
-const quoteJson = JSON.parse(fs.readFileSync("./quote.json"), "utf-8");
 
 //////////////// FS ///////////
 
+const order = fs.readFileSync("./entry.json", "utf-8");
+const orderID = JSON.parse(order);
+const quoteJson = JSON.parse(fs.readFileSync("./quote.json"), "utf-8");
 const readTxt = fs.readFileSync("./randomText.txt", "utf-8");
 
 // console.log(orderID[0]);
@@ -93,6 +93,7 @@ const convertTemperature = (unit, temp) => {
 };
 
 ////////////////////////
+
 // API'S
 
 app.get(`/` || "home", home);
