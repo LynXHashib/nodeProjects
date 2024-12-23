@@ -3,13 +3,13 @@
     "id": 0,
     "emai": "hashib4305@gmail.com",
     "username": "Hashib",
-    "password": 4305
+    "password": "4305"
   },
   {
     "id": 1,
     "email": "nigawawh@yahoo.com",
     "username": "Nigga",
-    "password": 124345
+    "password": "124345"
   },
   {
     "id": "2",
@@ -58,5 +58,23 @@
     "email": "yaera@gasklj.org",
     "username": "brada",
     "password": "17834"
+  },
+  {
+    "id": "10",
+    "email": "newuser@example.com",
+    "username": "NewUser",
+    "password": "12345"
+  },
+  {
+    "id": "11",
+    "email": "nwaarwi@broski.com",
+    "username": "brad",
+    "password": "634"
+  },
+  {
+    "id": "12",
+    "email": "adwd@broski.com",
+    "username": "yoski",
+    "password": "634"
   }
 ]

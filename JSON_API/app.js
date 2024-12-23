@@ -17,7 +17,9 @@ const orderID = JSON.parse(order);
 const quoteJson = JSON.parse(fs.readFileSync("./quote.json"), "utf-8");
 const readTxt = fs.readFileSync("./randomText.txt", "utf-8");
 const contactList = JSON.parse(fs.readFileSync("./contactList.json", "utf-8"));
-// console.log(orderID[0]);
+const tasksList = JSON.parse(fs.readFileSync("./tasks.json", "utf-8"));
+console.log(tasksList);
+
 const home = (req, res) => {
   res.status(200).sendFile(path.join(__dirname, `templates`, `root.html`));
 };
@@ -90,6 +92,9 @@ const contactForm = (req, res) => {
   // const mail = req.query.mail;
   const { username, password, email } = req.body;
 
+  if (!username || !password || isNaN(password) || !email) {
+    return res.status(400).send("Invalid parameters");
+  }
   const newJson = {
     id: `${newid}`,
     email: `${email}`,
@@ -98,15 +103,45 @@ const contactForm = (req, res) => {
   };
   contactList.push(newJson);
   console.log(newJson);
-  if (!username || !password || isNaN(password) || !email) {
-    res.status(404).send("Invalid parameters");
-  }
-  fs.writeFileSync("./contactList.json", JSON.stringify(contactList));
+  fs.writeFileSync("./contactList.json", JSON.stringify(contactList, null, 2));
   res.status(201).json({
     task: "success",
     info: newJson,
   });
 };
+
+const taskManager = (req, res) => {
+  const newID = tasksList.length;
+  const { task } = req.body;
+  if (!task) {
+    return res.status(400).send("Invalid Task");
+  }
+  const newJson = {
+    id: newID,
+    task: `${task}`,
+  };
+  tasksList.push(newJson);
+  fs.writeFileSync("./tasks.json", JSON.stringify(tasksList, null, 2));
+  return res.status(201).json({
+    Success: true,
+    info: newJson,
+  });
+};
+const deleteTask = (req, res) => {
+  const { id } = req.body;
+  tasksList.splice(id, 1);
+  tasksList.forEach((task, index) => {
+    task.id = index;
+  });
+
+  fs.writeFileSync("./tasks.json", JSON.stringify(tasksList, null, 2));
+  res.status(200).send("Task deleted successfully");
+  console.log(tasksList);
+};
+const editTask = (req, res) => {
+  const { id, newTask } = req.body;
+};
+
 ///////////////////////////
 
 const convertTemperature = (unit, temp) => {
@@ -125,19 +160,23 @@ const convertTemperature = (unit, temp) => {
 
 //////////////// GET ////////////////////
 
-app.get(`/` || "home", home);
+app.get(`/` || "/home", home);
 app.get(`/products`, product);
 app.get(`/products/:id`, productID);
 app.get("/joke", jokeApi);
 app.get("/read", read);
 app.get("/convert", convert);
 app.get("/quote", quote);
+app.get("/tasks", taskManager);
 
 ///// POST ///////
 
 app.post("/contact", contactForm);
+app.post("/tasks", taskManager);
 
 ///////////////////
+
+app.delete("/tasks", deleteTask);
 
 app.listen(PORT, () => {
   console.log(`Server is Running`);
