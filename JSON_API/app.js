@@ -140,6 +140,15 @@ const deleteTask = (req, res) => {
 };
 const editTask = (req, res) => {
   const { id, newTask } = req.body;
+  if (id === null || !newTask) {
+    return res.status(400).send("Invalid post");
+  }
+  if (id < 0 || id > tasksList.length) {
+    return res.status(400).send("Invalid post");
+  }
+  tasksList[id].task = newTask;
+  fs.writeFileSync("./tasks.json", JSON.stringify(tasksList, null, 2));
+  res.status(200).json({ newTask });
 };
 
 ///////////////////////////
@@ -177,6 +186,10 @@ app.post("/tasks", taskManager);
 ///////////////////
 
 app.delete("/tasks", deleteTask);
+
+/////
+
+app.patch("/tasks", editTask);
 
 app.listen(PORT, () => {
   console.log(`Server is Running`);
