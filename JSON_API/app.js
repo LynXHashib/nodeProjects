@@ -5,6 +5,9 @@ const otherRouter = require('./routes/otherRoutes');
 const router = require('./routes/home');
 const taskRouter = require('./routes/taskMangerRoutes');
 const convertTemp = require('./routes/convertTemp');
+const morgan = require('morgan');
+
+app.use(morgan('dev'));
 app.use(express.json());
 // app.use(express.static('templates'));
 // API'S

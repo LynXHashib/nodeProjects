@@ -1,5 +1,6 @@
 const fs = require('fs');
 const express = require('express');
+const client = require('../database/maindb');
 const tasksList = JSON.parse(
   fs.readFileSync(`${__dirname}/../tasks.json`, 'utf-8')
 );
@@ -9,24 +10,47 @@ const getTask = (req, res) => {
 };
 
 const postTask = (req, res) => {
-  const newID = tasksList.length;
   const { task } = req.body;
   if (!task) {
     return res.status(400).send('Invalid Task');
   }
+
   const newJson = {
-    id: newID,
     task: `${task}`,
   };
-  tasksList.push(newJson);
-  fs.writeFileSync(
-    `${__dirname}/../tasks.json`,
-    JSON.stringify(tasksList, null, 2)
-  );
-  return res.status(201).json({
-    Success: true,
-    info: newJson,
-  });
+
+  async function database(task) {
+    try {
+      // Connect the client to the server (optional starting in v4.7)
+      await client.connect();
+      // Send a ping to confirm a successful connection
+      await client.db('admin').command({ ping: 1 });
+      console.log(
+        'Pinged your deployment. You successfully connected to MongoDB!'
+      );
+
+      const db = client.db('JSON_API'); // Replace with your database name
+      const TaskList = db.collection('TaskList'); // Replace with your collection name
+
+      const insertManyResult = await TaskList.insertMany([task]);
+      console.log(
+        `${insertManyResult.insertedCount} documents successfully inserted.\n`
+      );
+      res.status(201).json({
+        Success: true,
+        info: newJson,
+      });
+    } catch (err) {
+      console.error(
+        `Something went wrong trying to insert the new documents: ${err}\n`
+      );
+      res.status(500).send('Internal Server Error');
+    } finally {
+      // Ensures that the client will close when you finish/error
+      await client.close();
+    }
+  }
+  database(newJson).catch(console.dir);
 };
 
 const deleteTask = (req, res) => {

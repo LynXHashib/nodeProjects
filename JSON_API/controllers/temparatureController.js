@@ -11,16 +11,17 @@ const convertTemperature = (unit, temp) => {
 };
 const convert = (req, res) => {
   const temp = parseFloat(req.query.temp);
-  const unit = req.query.unit.toLowerCase();
+  let unit = req.query.unit;
   console.log(temp);
   console.log(unit);
 
   if (isNaN(temp) || !unit) {
-    res.status(404).send('Provide Valid Temperature');
+    return res.status(404).send('Provide Valid Temperature');
   }
   if (convertTemperature(unit, temp) === null) {
-    res.status(404).send('Provide Valid Temperature');
+    return res.status(404).send('Provide Valid Temperature');
   }
+  unit = unit.toLowerCase();
   console.log(convertTemperature(unit, temp));
   res.status(200).json({
     original: `${temp} ${unit === 'c' ? 'celsius' : 'fahrenheit'}`,
