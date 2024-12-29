@@ -6,7 +6,32 @@ const tasksList = JSON.parse(
 );
 
 const getTask = (req, res) => {
-  res.status(200).json(tasksList);
+  async function database(task) {
+    try {
+      // Connect the client to the server (optional starting in v4.7)
+      await client.connect();
+      // Send a ping to confirm a successful connection
+      await client.db('admin').command({ ping: 1 });
+      console.log(
+        'Pinged your deployment. You successfully connected to MongoDB!'
+      );
+
+      const db = client.db('JSON_API'); // Replace with your database name
+      const TaskList = db.collection('TaskList'); // Replace with your collection name
+
+      const taskArray = await TaskList.find().toArray();
+      res.status(201).json(taskArray);
+    } catch (err) {
+      console.error(
+        `Something went wrong trying to insert the new documents: ${err}\n`
+      );
+      res.status(500).send('Internal Server Error');
+    } finally {
+      // Ensures that the client will close when you finish/error
+      await client.close();
+    }
+  }
+  database().catch(console.dir);
 };
 
 const postTask = (req, res) => {
