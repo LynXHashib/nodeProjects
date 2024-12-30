@@ -4,7 +4,6 @@ const client = require('../database/maindb');
 const tasksList = JSON.parse(
   fs.readFileSync(`${__dirname}/../tasks.json`, 'utf-8')
 );
-
 const getTask = (req, res) => {
   async function database(task) {
     try {
@@ -20,7 +19,10 @@ const getTask = (req, res) => {
       const TaskList = db.collection('TaskList'); // Replace with your collection name
 
       const taskArray = await TaskList.find().toArray();
-      res.status(201).json(taskArray);
+      const tasky = await TaskList.find();
+      console.log(tasky);
+
+      res.status(200).json(taskArray);
     } catch (err) {
       console.error(
         `Something went wrong trying to insert the new documents: ${err}\n`
